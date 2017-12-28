@@ -31,7 +31,7 @@ RUN add-apt-repository -y ppa:ansible/ansible \
 RUN pip2 install ansible-lint
 
 # Install Ansible inventory file.
-RUN echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts
+RUN echo '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts
 
 RUN systemctl set-default multi-user.target
 
