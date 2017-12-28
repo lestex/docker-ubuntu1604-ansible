@@ -14,6 +14,19 @@ rm -f /lib/systemd/system/anaconda.target.wants/*; \
 rm -f /lib/systemd/system/plymouth*; \
 rm -f /lib/systemd/system/systemd-update-utmp*;
 
+# Install Ansible, pip
+RUN add-apt-repository -y ppa:ansible/ansible \
+  && apt-get update \
+  && apt-get install -y --no-install-recommends \
+     ansible python-pip\
+  && rm -rf /var/lib/apt/lists/* \
+  && rm -Rf /usr/share/doc && rm -Rf /usr/share/man \
+  && apt-get clean
+
+# Install ansible lint
+RUN pip2 install ansible-lint
+
 RUN systemctl set-default multi-user.target
+
 ENV init /lib/systemd/systemd
 VOLUME [ "/sys/fs/cgroup" ]
