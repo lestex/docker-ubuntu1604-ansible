@@ -28,7 +28,8 @@ RUN add-apt-repository -y ppa:ansible/ansible \
   && apt-get clean
 
 # Install ansible lint
-RUN pip2 install ansible-lint
+RUN pip2 install wheel && \
+    pip2 install ansible-lint
 
 # Install Ansible inventory file.
 RUN echo '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts
