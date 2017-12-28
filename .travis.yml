@@ -1,0 +1,27 @@
+# https://docs.travis-ci.com/user/docker/
+services:
+  - docker
+
+env:
+  - REPO=$DOCKERHUB_USERNAME/docker-ubuntu1604-ansible
+  
+before_install:
+- sudo apt-get update -y
+- sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
+
+script:
+# Building the container.
+- docker build -t $REPO .
+
+# Test running the container.
+- docker run --name container -d --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro $REPO /lib/systemd/systemd
+#- docker exec -it container which ansible
+#- docker exec -it container which ansible-lint
+
+after_success:
+# Pushing the container to docker hub
+  - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then 
+    docker tag $REPO $REPO:latest;
+    fi
+  - docker push $REPO
